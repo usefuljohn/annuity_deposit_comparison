@@ -1183,10 +1183,10 @@ SOFTWARE.
       </div>
       <div class="preset-selector">
         <select id="presetSelect">
-          <option value="preset1">Immediate Annuity at Age 70 ($50k lump, 0 yrs wait, $345/mo quote, 4.75% CD)</option>
-          <option value="preset2">5-Yr Deferred Annuity ($50k lump, 5 yrs wait to Age 75, $485/mo quote, 4.75% CD)</option>
-          <option value="preset3">10-Yr Longevity / QLAC ($50k lump, 10 yrs wait to Age 80, $680/mo quote, 4.75% CD)</option>
-          <option value="preset4">Cash Refund / Heir Protection at Age 70 ($50k lump, 0 yrs wait, $315/mo quote, 4.75% CD)</option>
+          <option value="preset1" selected>Immediate Annuity with Cash Refund at Age 70 ($50k lump, 0 yrs wait, $315/mo quote, 4.75% CD)</option>
+          <option value="preset2">5-Yr Deferred Annuity with Cash Refund ($50k lump, 5 yrs wait to Age 75, $444/mo quote, 4.75% CD)</option>
+          <option value="preset3">10-Yr Longevity / QLAC with Cash Refund ($50k lump, 10 yrs wait to Age 80, $622/mo quote, 4.75% CD)</option>
+          <option value="preset4">Pure Life Only at Age 70 ($50k lump, 0 yrs wait, $345/mo quote, 4.75% CD • No Heir Protection)</option>
         </select>
       </div>
     </div>
@@ -1239,10 +1239,16 @@ SOFTWARE.
           </div>
           <div class="input-with-addons">
             <span class="input-addon">$</span>
-            <input type="number" id="quotedMonthlyPayout" min="10" max="100000" step="25" value="345" />
+            <input type="number" id="quotedMonthlyPayout" min="10" max="100000" step="25" value="315" />
             <span class="input-addon-right">/ mo</span>
           </div>
           <span class="input-hint">Fixed, level monthly payment quoted by the annuity provider (does not increase by a % each month).</span>
+
+          <!-- No Double Discount Guardrail Callout -->
+          <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: var(--radius-sm); padding: 0.4rem 0.65rem; margin-top: 0.2rem; font-size: 0.73rem; color: var(--text-muted); line-height: 1.4;">
+            <span style="color: var(--green); font-weight: 700;">✓ Direct Manual Quote:</span>
+            Your entered monthly quote is modeled 100% directly without any secondary haircut. If your quote from an insurer already accounts for Cash Refund, enter that exact dollar amount above.
+          </div>
 
           <!-- Contract Option / Heir Refund Guarantee -->
           <div style="margin-top: 0.35rem; display: flex; flex-direction: column; gap: 0.25rem;">
@@ -1250,11 +1256,11 @@ SOFTWARE.
               <label for="contractTypeSelect" style="font-size: 0.78rem; font-weight: 600; color: var(--text-muted);">Contract Option (Heir / Refund Guarantee):</label>
             </div>
             <select id="contractTypeSelect" style="padding: 0.4rem 0.6rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main); font-family: var(--font-sans); font-size: 0.8rem; outline: none; width: 100%; max-width: 100%;">
-              <option value="life_only" selected>Pure Life Only (Highest Payout • $0 to Heirs upon death)</option>
-              <option value="cash_refund">Cash Refund (Heir Protection • ~8.5% Discounted Payout)</option>
+              <option value="cash_refund" selected>Cash Refund (Default • Heirs Receive Uncollected Principal Upon Death)</option>
+              <option value="life_only">Pure Life Only (No Heir Protection • $0 to Heirs Upon Death)</option>
             </select>
-            <span class="input-hint" id="contractRefundNote" style="font-size: 0.72rem; color: var(--text-dim);">
-              Pure Life maximizes monthly income; Cash Refund returns uncollected principal to heirs at the cost of an ~8.5% lower monthly payment.
+            <span class="input-hint" id="contractRefundNote" style="font-size: 0.72rem; color: var(--text-dim); line-height: 1.4;">
+              Cash Refund active: Heirs receive any uncollected principal if you pass away early. Entered quote is credited directly with no double haircut.
             </span>
           </div>
 
@@ -1263,20 +1269,20 @@ SOFTWARE.
             <div class="quote-stats-grid">
               <div class="quote-stat-item">
                 <span class="quote-stat-label">Annual Payout</span>
-                <span class="quote-stat-val" id="statAnnualPayout">$4,140 / yr</span>
+                <span class="quote-stat-val" id="statAnnualPayout">$3,780 / yr</span>
               </div>
               <div class="quote-stat-item">
                 <span class="quote-stat-label">Payout Rate on Principal</span>
-                <span class="quote-stat-val" id="statPayoutRate">8.28%</span>
+                <span class="quote-stat-val" id="statPayoutRate">7.56%</span>
               </div>
             </div>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.2rem; flex-wrap: wrap; gap: 0.3rem;">
               <span style="font-size: 0.72rem; color: var(--text-dim);">
                 Need a benchmark quote?
-                <span id="benchmarkDiscountBadge" style="display: none; font-size: 0.7rem; color: var(--amber); margin-left: 0.2rem;">(8.5% refund discount applied)</span>
+                <span id="benchmarkDiscountBadge" style="display: inline-block; font-size: 0.7rem; color: var(--amber); margin-left: 0.2rem;">(~8.5% market refund discount included)</span>
               </span>
               <button class="btn btn-sm" id="btnBenchmarkQuote" type="button" title="Insert realistic benchmark quote for current age and contract type">
-                ⚡ Use Benchmark Quote (<span id="benchmarkValDisplay">$345/mo</span>)
+                ⚡ Use Benchmark Quote (<span id="benchmarkValDisplay">$315/mo</span>)
               </button>
             </div>
           </div>
@@ -1534,20 +1540,20 @@ SOFTWARE.
           <div class="qual-card annuity">
             <div class="qual-header" style="color: var(--purple);">
               <span>State 1: Annuity Contract</span>
-              <span>🔒 Guaranteed Income Floor</span>
+              <span id="qualContractBadge">🛡️ Cash Refund Guarantee</span>
             </div>
             <ul class="qual-list">
               <li>
                 <span class="qual-icon" style="color: var(--green);">✓</span>
-                <span><strong>Longevity Insurance:</strong> Guaranteed level monthly payout of <strong id="qualAnnMonthly">$850/mo</strong> cannot be outlived, even if you survive past 100 years old.</span>
+                <span><strong>Longevity Insurance:</strong> Guaranteed level monthly payout of <strong id="qualAnnMonthly">$315/mo</strong> cannot be outlived, even if you survive past 100 years old.</span>
               </li>
               <li>
                 <span class="qual-icon" style="color: var(--green);">✓</span>
                 <span><strong>Zero Market & Reinvestment Risk:</strong> Income payment is fixed and insulated from bond yield drops or economic recessions.</span>
               </li>
-              <li>
-                <span class="qual-icon" style="color: var(--red);">✕</span>
-                <span><strong>Zero Capital Residual:</strong> Once annuitized (life option), the principal is surrendered to the insurer. Beneficiaries receive $0 upon death.</span>
+              <li id="qualResidualItem">
+                <span class="qual-icon" style="color: var(--green);">✓</span>
+                <span><strong>Cash Refund Heir Guarantee:</strong> If you pass away before receiving your full principal back ($50,000), uncollected balance is refunded directly to your heirs or estate.</span>
               </li>
               <li>
                 <span class="qual-icon" style="color: var(--red);">✕</span>
@@ -1714,6 +1720,8 @@ SOFTWARE.
       // Qualitative Highlights
       qualAnnMonthly: document.getElementById('qualAnnMonthly'),
       qualCdCompounded: document.getElementById('qualCdCompounded'),
+      qualContractBadge: document.getElementById('qualContractBadge'),
+      qualResidualItem: document.getElementById('qualResidualItem'),
 
       // Tables & Controls
       milestonesTableBody: document.getElementById('milestonesTableBody'),
@@ -1811,9 +1819,9 @@ SOFTWARE.
         elements.benchmarkDiscountBadge.style.display = isCashRefund ? 'inline-block' : 'none';
       }
       if (elements.contractRefundNote) {
-        elements.contractRefundNote.textContent = isCashRefund
-          ? 'Cash Refund active: Heirs receive any uncollected principal if you pass away early (~8.5% haircut applied to monthly payout).'
-          : 'Pure Life active: Maximum monthly payout ($0 to heirs upon death; insurer retains remaining principal).';
+        elements.contractRefundNote.innerHTML = isCashRefund
+          ? '<span style="color: var(--green); font-weight: 600;">✓ Cash Refund active:</span> Heirs receive uncollected principal upon early death. Your entered quote ($' + Math.round(quotedMonthlyPayout).toLocaleString() + '/mo) is modeled directly 1:1 with zero duplicate haircut.'
+          : '<span style="color: var(--amber); font-weight: 600;">Pure Life active:</span> Maximum monthly payout ($0 to heirs upon death; insurer retains remaining principal).';
       }
 
       // 1. Simulation Timeline Execution
@@ -1947,6 +1955,8 @@ SOFTWARE.
         finalCdTotal,
         quotedMonthlyPayout,
         finalCdEstate,
+        finalAnnuityEstate,
+        isCashRefund,
         cdNestEgg,
         retireAge,
         endAge: startAge + totalYears,
@@ -1974,6 +1984,23 @@ SOFTWARE.
       // Update Qualitative Highlights
       elements.qualAnnMonthly.textContent = `${fmtUSD(quotedMonthlyPayout)}/mo`;
       elements.qualCdCompounded.textContent = fmtUSD(cdNestEgg);
+
+      if (elements.qualResidualItem) {
+        if (isCashRefund) {
+          elements.qualResidualItem.innerHTML = `
+            <span class="qual-icon" style="color: var(--green);">✓</span>
+            <span><strong>Cash Refund Heir Guarantee:</strong> If you pass away before receiving your full principal back (${fmtUSD(lumpSum)}), the uncollected balance is refunded directly to your heirs or estate.</span>
+          `;
+        } else {
+          elements.qualResidualItem.innerHTML = `
+            <span class="qual-icon" style="color: var(--red);">✕</span>
+            <span><strong>Zero Capital Residual:</strong> Once annuitized (pure life), the principal is surrendered to the insurer. Beneficiaries receive $0 upon death.</span>
+          `;
+        }
+      }
+      if (elements.qualContractBadge) {
+        elements.qualContractBadge.textContent = isCashRefund ? '🛡️ Cash Refund Guarantee' : '🔒 Pure Life Income Floor';
+      }
 
       // Update Milestones Table
       updateMilestonesTable({
@@ -2036,7 +2063,17 @@ SOFTWARE.
         }
         
         if (data.finalCdEstate > 0) {
-          desc += `the CD/Bond sustains the full monthly payments for all ${data.payoutYears} years and still preserves ${fmtUSD(data.finalCdEstate)} in accessible principal at Age ${data.endAge}, whereas the annuity forfeits 100% of the principal to the insurance company.`;
+          let annResidualText = '';
+          if (data.isCashRefund) {
+            if (data.finalAnnuityEstate > 0) {
+              annResidualText = `while the annuity still preserves ${fmtUSD(data.finalAnnuityEstate)} for heirs under the Cash Refund guarantee.`;
+            } else {
+              annResidualText = `whereas with the Cash Refund annuity, you have already recouped 100% of your initial principal through guaranteed monthly income payments.`;
+            }
+          } else {
+            annResidualText = `whereas the pure life annuity forfeits remaining principal to the insurer upon death.`;
+          }
+          desc += `the CD/Bond sustains the full monthly payments for all ${data.payoutYears} years and still preserves ${fmtUSD(data.finalCdEstate)} in accessible principal at Age ${data.endAge}, ${annResidualText}`;
         } else {
           desc += `the CD/Bond generated higher net wealth prior to exhausting at Age ${data.startAge + Math.floor(data.cdDepletedMonth / 12)}.`;
         }
@@ -2553,6 +2590,7 @@ SOFTWARE.
 
       // Reset Defaults
       elements.resetDefaultsBtn.addEventListener('click', () => {
+        elements.presetSelect.value = 'preset1';
         loadPreset('preset1');
       });
 
@@ -2582,46 +2620,7 @@ SOFTWARE.
 
     function loadPreset(presetKey) {
       if (presetKey === 'preset1') {
-        // Immediate Annuity at Age 70 ($50k lump, 0 yrs wait, $345/mo quote, 4.75% CD)
-        elements.lumpSumAmount.value = 50000;
-        elements.lumpSumRange.value = 50000;
-        elements.yearsWait.value = 0;
-        elements.yearsWaitRange.value = 0;
-        elements.quotedMonthlyPayout.value = 345;
-        elements.cdRate.value = 4.75;
-        elements.cdRateRange.value = 4.75;
-        elements.startAge.value = 70;
-        elements.payoutYears.value = 20;
-        elements.payoutYearsRange.value = 20;
-        elements.contractTypeSelect.value = 'life_only';
-      } else if (presetKey === 'preset2') {
-        // 5-Yr Deferred Annuity ($50k lump, 5 yrs wait to Age 75, $485/mo quote, 4.75% CD)
-        elements.lumpSumAmount.value = 50000;
-        elements.lumpSumRange.value = 50000;
-        elements.yearsWait.value = 5;
-        elements.yearsWaitRange.value = 5;
-        elements.quotedMonthlyPayout.value = 485;
-        elements.cdRate.value = 4.75;
-        elements.cdRateRange.value = 4.75;
-        elements.startAge.value = 70;
-        elements.payoutYears.value = 20;
-        elements.payoutYearsRange.value = 20;
-        elements.contractTypeSelect.value = 'life_only';
-      } else if (presetKey === 'preset3') {
-        // 10-Yr Longevity / QLAC ($50k lump, 10 yrs wait to Age 80, $680/mo quote, 4.75% CD)
-        elements.lumpSumAmount.value = 50000;
-        elements.lumpSumRange.value = 50000;
-        elements.yearsWait.value = 10;
-        elements.yearsWaitRange.value = 10;
-        elements.quotedMonthlyPayout.value = 680;
-        elements.cdRate.value = 4.75;
-        elements.cdRateRange.value = 4.75;
-        elements.startAge.value = 70;
-        elements.payoutYears.value = 20;
-        elements.payoutYearsRange.value = 20;
-        elements.contractTypeSelect.value = 'life_only';
-      } else if (presetKey === 'preset4') {
-        // Cash Refund / Heir Protection at Age 70 ($50k lump, 0 yrs wait, $315/mo quote, 4.75% CD)
+        // Immediate Annuity with Cash Refund at Age 70 ($50k lump, 0 yrs wait, $315/mo quote, 4.75% CD)
         elements.lumpSumAmount.value = 50000;
         elements.lumpSumRange.value = 50000;
         elements.yearsWait.value = 0;
@@ -2633,6 +2632,45 @@ SOFTWARE.
         elements.payoutYears.value = 20;
         elements.payoutYearsRange.value = 20;
         elements.contractTypeSelect.value = 'cash_refund';
+      } else if (presetKey === 'preset2') {
+        // 5-Yr Deferred Annuity with Cash Refund ($50k lump, 5 yrs wait to Age 75, $444/mo quote, 4.75% CD)
+        elements.lumpSumAmount.value = 50000;
+        elements.lumpSumRange.value = 50000;
+        elements.yearsWait.value = 5;
+        elements.yearsWaitRange.value = 5;
+        elements.quotedMonthlyPayout.value = 444;
+        elements.cdRate.value = 4.75;
+        elements.cdRateRange.value = 4.75;
+        elements.startAge.value = 70;
+        elements.payoutYears.value = 20;
+        elements.payoutYearsRange.value = 20;
+        elements.contractTypeSelect.value = 'cash_refund';
+      } else if (presetKey === 'preset3') {
+        // 10-Yr Longevity / QLAC with Cash Refund ($50k lump, 10 yrs wait to Age 80, $622/mo quote, 4.75% CD)
+        elements.lumpSumAmount.value = 50000;
+        elements.lumpSumRange.value = 50000;
+        elements.yearsWait.value = 10;
+        elements.yearsWaitRange.value = 10;
+        elements.quotedMonthlyPayout.value = 622;
+        elements.cdRate.value = 4.75;
+        elements.cdRateRange.value = 4.75;
+        elements.startAge.value = 70;
+        elements.payoutYears.value = 20;
+        elements.payoutYearsRange.value = 20;
+        elements.contractTypeSelect.value = 'cash_refund';
+      } else if (presetKey === 'preset4') {
+        // Pure Life Only at Age 70 ($50k lump, 0 yrs wait, $345/mo quote, 4.75% CD • No Heir Protection)
+        elements.lumpSumAmount.value = 50000;
+        elements.lumpSumRange.value = 50000;
+        elements.yearsWait.value = 0;
+        elements.yearsWaitRange.value = 0;
+        elements.quotedMonthlyPayout.value = 345;
+        elements.cdRate.value = 4.75;
+        elements.cdRateRange.value = 4.75;
+        elements.startAge.value = 70;
+        elements.payoutYears.value = 20;
+        elements.payoutYearsRange.value = 20;
+        elements.contractTypeSelect.value = 'life_only';
       }
       runSimulation();
     }
